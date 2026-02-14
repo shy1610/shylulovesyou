@@ -91,16 +91,24 @@ input{
 .scratch-container {
   position: relative;
   width: 300px;
-  height: 300px;
+  aspect-ratio: 1 / 1;   /* ✅ keeps square */
   margin: auto;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .scratch-container img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;   /* ✅ NO cropping */
   display: block;
 }
+
+#scratch {
+  position: absolute;
+  inset: 0;              /* ✅ fills image exactly */
+}
+
 
 #scratch {
   position: absolute;
@@ -198,8 +206,6 @@ const canvas=document.getElementById("scratch");
 const ctx=canvas.getContext("2d");
 
 function initScratch(){
-  canvas.width=250;
-  canvas.height=250;
   ctx.fillStyle="#999";
   ctx.fillRect(0,0,canvas.width,canvas.height);
   ctx.globalCompositeOperation="destination-out";
@@ -214,16 +220,25 @@ canvas.addEventListener("touchstart",()=>scratching=true);
 canvas.addEventListener("touchend",()=>scratching=false);
 canvas.addEventListener("touchmove",scratch);
 
+let scratched = 0;
+
 function scratch(e){
   if(!scratching) return;
-  const rect=canvas.getBoundingClientRect();
-  const x=(e.touches?e.touches[0].clientX:e.clientX)-rect.left;
-  const y=(e.touches?e.touches[0].clientY:e.clientY)-rect.top;
+
+  const rect = canvas.getBoundingClientRect();
+  const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+  const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+
   ctx.beginPath();
-  ctx.arc(x,y,15,0,Math.PI*2);
+  ctx.arc(x, y, 18, 0, Math.PI * 2);
   ctx.fill();
-  document.getElementById("continueBtn").classList.remove("hidden");
+
+  scratched++;
+  if(scratched > 40){
+    document.getElementById("continueBtn").classList.remove("hidden");
+  }
 }
+
 
 /* Typing check */
 const letterContent=`My love, you’ve been my everything since the day we met.\
@@ -257,16 +272,21 @@ function checkText(){
   }
 }
 
-ctx.globalCompositeOperation="destination-out";
 const img = document.getElementById("hiddenImage");
 
-img.onload = () => {
-  canvas.width = img.offsetWidth;
-  canvas.height = img.offsetHeight;
+function resizeCanvas(){
+  canvas.width = img.clientWidth;
+  canvas.height = img.clientHeight;
 
-  ctx.fillStyle = "#4a90e2"; // blue scratch layer
+  ctx.globalCompositeOperation = "source-over";
+  ctx.fillStyle = "#999";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-}; 
+  ctx.globalCompositeOperation = "destination-out";
+}
+
+img.onload = resizeCanvas;
+window.addEventListener("resize", resizeCanvas);
+
 </script>
   
 </body>
