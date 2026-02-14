@@ -114,6 +114,7 @@ input{
   width: 100%;
   height: 100%;
   object-fit: contain;   /* ✅ NO cropping */
+  object-fit: cover;
   display: block;
 }
 
@@ -211,14 +212,6 @@ function openTyping(){
 const canvas=document.getElementById("scratch");
 const ctx=canvas.getContext("2d");
 
-function initScratch(){
-  ctx.globalCompositeOperation = "source-over";
-  ctx.fillStyle = "#999";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.globalCompositeOperation = "destination-out";
-}
-
-
 let scratching=false;
 canvas.addEventListener("mousedown",()=>scratching=true);
 canvas.addEventListener("mouseup",()=>scratching=false);
@@ -227,6 +220,7 @@ canvas.addEventListener("mousemove",scratch);
 canvas.addEventListener("touchstart",()=>scratching=true);
 canvas.addEventListener("touchend",()=>scratching=false);
 canvas.addEventListener("touchmove",scratch);
+canvas.addEventListener("touchmove", scratch, { passive: false });
 
 let scratched = 0;
 
@@ -286,8 +280,13 @@ function resizeCanvas(){
   canvas.width = img.clientWidth;
   canvas.height = img.clientHeight;
 
-  initScratch();   // ✅ ADD THIS LINE
+  ctx.globalCompositeOperation = "source-over";
+  ctx.fillStyle = "#999";        // ✅ visible scratch layer
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.globalCompositeOperation = "destination-out";
 }
+
 
 
 img.onload = resizeCanvas;
