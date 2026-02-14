@@ -195,8 +195,12 @@ function moveNo(){
 function openScratch(){
   page1.classList.add("hidden");
   pageScratch.classList.remove("hidden");
-  initScratch();
+
+  setTimeout(() => {
+    resizeCanvas();   // ✅ IMPORTANT
+  }, 50);
 }
+
 
 function openTyping(){
   pageScratch.classList.add("hidden");
@@ -208,10 +212,12 @@ const canvas=document.getElementById("scratch");
 const ctx=canvas.getContext("2d");
 
 function initScratch(){
-  ctx.fillStyle="#999";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-  ctx.globalCompositeOperation="destination-out";
+  ctx.globalCompositeOperation = "source-over";
+  ctx.fillStyle = "#999";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.globalCompositeOperation = "destination-out";
 }
+
 
 let scratching=false;
 canvas.addEventListener("mousedown",()=>scratching=true);
@@ -280,11 +286,9 @@ function resizeCanvas(){
   canvas.width = img.clientWidth;
   canvas.height = img.clientHeight;
 
-  ctx.globalCompositeOperation = "source-over";
-  ctx.fillStyle = "#999";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.globalCompositeOperation = "destination-out";
+  initScratch();   // ✅ ADD THIS LINE
 }
+
 
 img.onload = resizeCanvas;
 window.addEventListener("resize", resizeCanvas);
