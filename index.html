@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -87,6 +88,7 @@ input{
   white-space:pre-wrap;
 }
 
+/* Scratch card */
 .scratch-container {
   position: relative;
   width: 300px;
@@ -196,6 +198,10 @@ function moveNo(){
 function openScratch(){
   page1.classList.add("hidden");
   pageScratch.classList.remove("hidden");
+
+  setTimeout(() => {
+    resizeCanvas();   // ✅ IMPORTANT
+  }, 50);
 }
 
 
@@ -271,7 +277,7 @@ function checkText(){
 }
 
 const img = document.getElementById("hiddenImage");
-
+  
 function resizeCanvas(){
   canvas.width = img.clientWidth;
   canvas.height = img.clientHeight;
@@ -285,13 +291,14 @@ function resizeCanvas(){
 
 
 
+
 img.onload = () => {
   const ratio = img.naturalHeight / img.naturalWidth;
 
   const container = document.querySelector('.scratch-container');
   container.style.height = (300 * ratio) + 'px';
 
-  resizeCanvas();   // ✅ scratch applied BEFORE user sees it
+  resizeCanvas();   // ✅ canvas now matches image
 };
 
 window.addEventListener("resize", resizeCanvas);
