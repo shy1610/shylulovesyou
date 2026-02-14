@@ -1,109 +1,86 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Valentine Surprise💚💙 </title>
+<title>Valentine 💙</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
   margin:0;
   height:100vh;
+  background:linear-gradient(135deg,#1e3c72,#2a5298);
   display:flex;
-  align-items:center;
   justify-content:center;
-  background:linear-gradient(135deg,#f8a5a5,#fbc2eb);
-  font-family: 'Segoe UI', sans-serif;
+  align-items:center;
+  font-family:'Segoe UI',sans-serif;
+  overflow:hidden;
 }
 
+/* Card */
 .card{
   background:#fff;
-  width:90%;
-  max-width:420px;
   padding:30px;
-  border-radius:20px;
+  border-radius:15px;
+  width:90%;
+  max-width:360px;
   text-align:center;
-  box-shadow:0 20px 40px rgba(0,0,0,0.15);
-  position:relative;
+  position:absolute;
+  z-index:10;
 }
 
-.hidden{ display:none; }
+.hidden{display:none;}
 
-h2{
-  color:#d6336c;
-}
+h2{color:#1e3c72}
 
+/* Buttons */
 button{
-  padding:12px 26px;
+  padding:12px 22px;
   border:none;
   border-radius:25px;
+  margin:10px;
   font-size:16px;
   cursor:pointer;
+  z-index:20;
+  position:relative;
 }
 
-.yes{
-  background:#ff4d6d;
-  color:#fff;
+.yes{background:#ff5fa2;color:white}
+.no{background:#ddd}
+
+/* Hearts */
+.heart{
+  position:fixed;
+  z-index:1;
+  animation:float 6s linear infinite;
 }
 
-.no{
-  background:#ddd;
-  position:absolute;
+@keyframes float{
+  from{transform:translateY(100vh);opacity:1}
+  to{transform:translateY(-10vh);opacity:0}
 }
 
+/* Scratch */
 .scratch-container{
   position:relative;
-  width:250px;
-  height:250px;
+  width:300px;
+  height:300px;
   margin:auto;
 }
 
 .scratch-container img{
   width:100%;
   height:100%;
-  border-radius:15px;
-  display:block;
+  object-fit:cover;
+  border-radius:10px;
 }
 
 #scratch{
   position:absolute;
   top:0;
   left:0;
-  border-radius:15px;
-}
-  
-
-input{
-  width:80%;
-  padding:12px;
-  border-radius:20px;
-  border:2px solid #ffb3c1;
-  outline:none;
-  text-align:center;
-}
-
-.error{
-  color:#ff4d6d;
-  margin-top:10px;
-  font-weight:600;
-}
-
-.letter{
-  font-style:italic;
-  line-height:1.6;
-  color:#444;
-}
-
-.heart{
-  position:absolute;
-  animation: float 5s infinite;
-  opacity:0.6;
-}
-
-@keyframes float{
-  0%{transform:translateY(0);}
-  50%{transform:translateY(-20px);}
-  100%{transform:translateY(0);}
+  border-radius:10px;
 }
 </style>
 </head>
@@ -112,128 +89,81 @@ input{
 
 <!-- PAGE 1 -->
 <div class="card" id="page1">
-  <h2>Dharshan, will you be my valentine ? 💖</h2>
-  <br><br>
-  <button class="yes" onclick="openPage2()">Yes</button>
+  <h2 id="typing"></h2><br>
+  <button class="yes" onclick="openScratch()">Yes</button>
   <button class="no" id="noBtn">No</button>
-  <p style="margin-top:60px;color:#777;">Don't waste your time to follow the No 😜</p>
+  <p style="margin-top:50px;color:#555;">No is not an option 😜</p>
 </div>
-
-<div class="scratch-container">
-  <!-- Hidden Image -->
-  <img src="Dharshylu.png" id="hiddenImage">
-
-  <!-- Scratch Layer -->
-  <canvas id="scratch"></canvas>
-</div>
-  
 
 <!-- PAGE 2 -->
-<div class="card hidden" id="page2">
-  <h2>Hey handsome ❤️</h2>
-  <p>Type <b>i love you di pondati</b> To unlock my surprise love letter💋</p>
-  <input type="text" id="loveInput" placeholder="Type here...">
-  <br><br>
-  <button class="yes" onclick="checkText()">Submit 💕</button>
-  <div class="error" id="error"></div>
+<div class="card hidden" id="pageScratch">
+  <h2>Scratch to reveal 💙</h2><br>
+  <div class="scratch-container">
+    <img src="Dharshylu.png" id="hiddenImage">
+    <canvas id="scratch"></canvas>
+  </div><br>
+  <button class="yes hidden" id="continueBtn">Continue 💗</button>
 </div>
 
-<!-- PAGE 3 -->
-<div class="card hidden" id="page3">
-  <h2>💌 My Love Letter</h2>
-  <p class="letter" id="letterText"></p>
-const letterContent=My love, you’ve been my everything since the day we met.
-I fall in love with you again and again. 
-I wish to live my rest of the life with you Thangamey... 
-Lets shine and grow together.
-Dharsh, You are the meaning of my life. 
-This is our first valentines day.... i am sooo exceited..hehehe😍🤩😍🤩
-i love you dharsh...🫂🫂🫂🫂🫂🫂🫂🫂🫂🫂🫂🫂🫂🫂
-Dharshan....ummmhhhhhaaaaaa💋💋💋💋💋💋💋💋💋💋💋💋
-my Dharshan ❤️`;
-</div>  
-let index = 0;
-
-function typeLetter() {
-  const letterElement = document.getElementById("letterText");
-
-  if (index < letterContent.length) {
-    letterElement.innerHTML += letterContent.charAt(index);
-    index++;
-    setTimeout(typeLetter, 40); // typing speed (lower = faster)
-  }
-}
- 
-
 <script>
-const noBtn = document.getElementById("noBtn");
-
-noBtn.addEventListener("mouseover", moveNo);
-noBtn.addEventListener("touchstart", moveNo);
-
-function moveNo(){
-  const x = Math.random() * 250;
-  const y = Math.random() * 200;
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
-}
-
-const canvas = document.getElementById("scratch");
-const ctx = canvas.getContext("2d");
-const img = document.getElementById("hiddenImage");
-
-let scratching = false;
-
-// Initialize scratch layer
-img.onload = () => {
-  canvas.width = img.offsetWidth;
-  canvas.height = img.offsetHeight;
-
-  ctx.fillStyle = "#4a90e2"; // scratch color
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.globalCompositeOperation = "destination-out";
-};
-
-// Mouse events
-canvas.addEventListener("mousedown", () => scratching = true);
-canvas.addEventListener("mouseup", () => scratching = false);
-canvas.addEventListener("mousemove", scratch);
-
-// Touch events (mobile)
-canvas.addEventListener("touchstart", () => scratching = true);
-canvas.addEventListener("touchend", () => scratching = false);
-canvas.addEventListener("touchmove", scratch);
-
-function scratch(e){
-  if(!scratching) return;
-
-  const rect = canvas.getBoundingClientRect();
-  const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-  const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-
-  ctx.beginPath();
-  ctx.arc(x, y, 18, 0, Math.PI * 2);
-  ctx.fill();
-}  
-
-function openPage2(){
-  document.getElementById("page1").classList.add("hidden");
-  document.getElementById("page2").classList.remove("hidden");
-}
-
-function checkText(){
-  const text = document.getElementById("loveInput").value.trim().toLowerCase();
-
-  if(text === "i love you pondatti"){
-    document.getElementById("page2").classList.add("hidden");
-    document.getElementById("page3").classList.remove("hidden");
-    typeLetter(); // ❤️ start typing effect
-  }else{
-    document.getElementById("error").innerText =
-      "😜 Nope! Type it properly baby!";
+/* Typing */
+const msg="Dharshan, will you be my Valentine ? 💖";
+let i=0;
+function typeText(){
+  if(i<msg.length){
+    typing.innerHTML+=msg[i++];
+    setTimeout(typeText,70);
   }
 }
+typeText();
 
+/* Floating hearts */
+setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML="💗";
+  h.style.left=Math.random()*100+"vw";
+  h.style.fontSize=Math.random()*20+15+"px";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
+},500);
+
+/* No button dodge (inside card) */
+const noBtn=document.getElementById("noBtn");
+noBtn.addEventListener("mouseenter",()=>{
+  noBtn.style.left=Math.random()*120-60+"px";
+  noBtn.style.top=Math.random()*60-30+"px";
+});
+
+/* Navigation */
+function openScratch(){
+  page1.classList.add("hidden");
+  pageScratch.classList.remove("hidden");
+  initScratch();
+}
+
+/* Scratch logic */
+function initScratch(){
+  const canvas=scratch;
+  const ctx=canvas.getContext("2d");
+  const img=hiddenImage;
+  const btn=continueBtn;
+
+  img.onload=()=>{
+    canvas.width=img.offsetWidth;
+    canvas.height=img.offsetHeight;
+    ctx.fillStyle="#4a90e2";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+  };
+
+  canvas.addEventListener("mousemove",e=>{
+    const r=canvas.getBoundingClientRect();
+    ctx.globalCompositeOperation="destination-out";
+    ctx.beginPath();
+    ctx.arc(e.clientX-r.left,e.clientY-r.top,20,0,Math.PI*2);
+    ctx.fill();
+    btn.classList.remove("hidden");
+  });
 }
 </script>
 
