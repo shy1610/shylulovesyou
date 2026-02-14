@@ -129,7 +129,7 @@ for(let i=0;i<25;i++){
 <div class="card" id="page1">
   <h2>Dharshan, will you be my valentine ? 💖</h2>
   <br><br>
-  <button class="yes" onclick="opensScratch()">Yes</button>
+  <button class="yes" onclick="openScratch()">Yes</button>
   <button class="no" id="noBtn">No</button>
   <p style="margin-top:60px;color:#777;">Don't waste your time to follow the No 😜</p>
 </div>
@@ -166,6 +166,13 @@ const noBtn = document.getElementById("noBtn");
 
 noBtn.addEventListener("mouseover", moveNo);
 noBtn.addEventListener("touchstart", moveNo);
+const page1 = document.getElementById("page1");
+const pageScratch = document.getElementById("pageScratch");
+const page2 = document.getElementById("page2");
+const page3 = document.getElementById("page3");
+const loveInput = document.getElementById("loveInput");
+const letterText = document.getElementById("letterText");
+const error = document.getElementById("error");
 
 function moveNo(){
   const x = Math.random() * 250;
