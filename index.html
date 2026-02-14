@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Valentine Surprise ❤️</title>
+<title>Valentine Surprise💚💙 </title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -51,6 +51,28 @@ button{
   position:absolute;
 }
 
+.scratch-container{
+  position:relative;
+  width:250px;
+  height:250px;
+  margin:auto;
+}
+
+.scratch-container img{
+  width:100%;
+  height:100%;
+  border-radius:15px;
+  display:block;
+}
+
+#scratch{
+  position:absolute;
+  top:0;
+  left:0;
+  border-radius:15px;
+}
+  
+
 input{
   width:80%;
   padding:12px;
@@ -97,10 +119,19 @@ input{
   <p style="margin-top:60px;color:#777;">Don't waste your time to follow the No 😜</p>
 </div>
 
+<div class="scratch-container">
+  <!-- Hidden Image -->
+  <img src="Dharshylu.png" id="hiddenImage">
+
+  <!-- Scratch Layer -->
+  <canvas id="scratch"></canvas>
+</div>
+  
+
 <!-- PAGE 2 -->
 <div class="card hidden" id="page2">
   <h2>Hey handsome ❤️</h2>
-  <p>Type <b>i love you pondatti</b> to unlock my surprise love letter</p>
+  <p>Type <b>i love you di pondati</b> To unlock my surprise love letter💋</p>
   <input type="text" id="loveInput" placeholder="Type here...">
   <br><br>
   <button class="yes" onclick="checkText()">Submit 💕</button>
@@ -110,14 +141,29 @@ input{
 <!-- PAGE 3 -->
 <div class="card hidden" id="page3">
   <h2>💌 My Love Letter</h2>
-  <p class="letter">
-    My love, you’ve been my everything since the day we met.  
-    Even after marriage, our love keeps growing stronger.  
-    You work hard for us every day, and I fall in love with you  
-    again and again. You are my forever, my safe place,  
-    my Dharshan ❤️
-  </p>
-</div>
+  <p class="letter" id="letterText"></p>
+const letterContent=My love, you’ve been my everything since the day we met.
+I fall in love with you again and again. 
+I wish to live my rest of the life with you Thangamey... 
+Lets shine and grow together.
+Dharsh, You are the meaning of my life. 
+This is our first valentines day.... i am sooo exceited..hehehe😍🤩😍🤩
+i love you dharsh...🫂🫂🫂🫂🫂🫂🫂🫂🫂🫂🫂🫂🫂🫂
+Dharshan....ummmhhhhhaaaaaa💋💋💋💋💋💋💋💋💋💋💋💋
+my Dharshan ❤️`;
+</div>  
+let index = 0;
+
+function typeLetter() {
+  const letterElement = document.getElementById("letterText");
+
+  if (index < letterContent.length) {
+    letterElement.innerHTML += letterContent.charAt(index);
+    index++;
+    setTimeout(typeLetter, 40); // typing speed (lower = faster)
+  }
+}
+ 
 
 <script>
 const noBtn = document.getElementById("noBtn");
@@ -132,6 +178,44 @@ function moveNo(){
   noBtn.style.top = y + "px";
 }
 
+const canvas = document.getElementById("scratch");
+const ctx = canvas.getContext("2d");
+const img = document.getElementById("hiddenImage");
+
+let scratching = false;
+
+// Initialize scratch layer
+img.onload = () => {
+  canvas.width = img.offsetWidth;
+  canvas.height = img.offsetHeight;
+
+  ctx.fillStyle = "#4a90e2"; // scratch color
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.globalCompositeOperation = "destination-out";
+};
+
+// Mouse events
+canvas.addEventListener("mousedown", () => scratching = true);
+canvas.addEventListener("mouseup", () => scratching = false);
+canvas.addEventListener("mousemove", scratch);
+
+// Touch events (mobile)
+canvas.addEventListener("touchstart", () => scratching = true);
+canvas.addEventListener("touchend", () => scratching = false);
+canvas.addEventListener("touchmove", scratch);
+
+function scratch(e){
+  if(!scratching) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+  const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+
+  ctx.beginPath();
+  ctx.arc(x, y, 18, 0, Math.PI * 2);
+  ctx.fill();
+}  
+
 function openPage2(){
   document.getElementById("page1").classList.add("hidden");
   document.getElementById("page2").classList.remove("hidden");
@@ -139,13 +223,17 @@ function openPage2(){
 
 function checkText(){
   const text = document.getElementById("loveInput").value.trim().toLowerCase();
+
   if(text === "i love you pondatti"){
     document.getElementById("page2").classList.add("hidden");
     document.getElementById("page3").classList.remove("hidden");
+    typeLetter(); // ❤️ start typing effect
   }else{
     document.getElementById("error").innerText =
       "😜 Nope! Type it properly baby!";
   }
+}
+
 }
 </script>
 
