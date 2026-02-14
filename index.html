@@ -197,10 +197,6 @@ function moveNo(){
 function openScratch(){
   page1.classList.add("hidden");
   pageScratch.classList.remove("hidden");
-
-  setTimeout(() => {
-    resizeCanvas();   // ✅ IMPORTANT
-  }, 50);
 }
 
 
@@ -296,10 +292,11 @@ img.onload = () => {
   const container = document.querySelector('.scratch-container');
   container.style.height = (300 * ratio) + 'px';
 
-  resizeCanvas();   // ✅ canvas now matches image
+  resizeCanvas();   // ✅ scratch applied BEFORE user sees it
 };
 
 window.addEventListener("resize", resizeCanvas);
+
 
 </script>
   
