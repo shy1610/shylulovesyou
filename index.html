@@ -114,10 +114,9 @@ input{
 .scratch-container img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  visibility: hidden;   /* 🔑 REQUIRED */
+  object-fit: cover;   /* ✅ REQUIRED */
+  display: block;
 }
-
 
 
 </style>
@@ -288,26 +287,18 @@ function resizeCanvas(){
 
 
 img.onload = () => {
-  const container = document.querySelector('.scratch-container');
-
   const ratio = img.naturalHeight / img.naturalWidth;
-  container.style.height = (300 * ratio) + "px";
 
-  canvas.width = img.clientWidth;
-  canvas.height = img.clientHeight;
+  const container = document.querySelector('.scratch-container');
+  container.style.height = (300 * ratio) + 'px';
 
-  ctx.globalCompositeOperation = "source-over";
-  ctx.fillStyle = "#999";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.globalCompositeOperation = "destination-out";
-
-  img.style.visibility = "visible"; // show image AFTER scratch layer
+  resizeCanvas();   // ✅ scratch applied BEFORE user sees it
 };
+
+window.addEventListener("resize", resizeCanvas);
 
 
 </script>
   
 </body>
 </html>
-
