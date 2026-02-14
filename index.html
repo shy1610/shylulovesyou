@@ -96,6 +96,19 @@ input{
   border-radius: 12px;
   overflow: hidden;
 }
+#scratch {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+}
+
+#scratch {
+  position: absolute;
+  inset: 0;              /* ✅ fills image exactly */
+}
 
 .scratch-container img {
   width: 100%;
@@ -104,17 +117,6 @@ input{
   display: block;
 }
 
-#scratch {
-  position: absolute;
-  inset: 0;              /* ✅ fills image exactly */
-}
-
-
-#scratch {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
 </style>
 </head>
 
