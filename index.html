@@ -88,15 +88,15 @@ input{
   white-space:pre-wrap;
 }
 
-/* Scratch card */
 .scratch-container {
   position: relative;
   width: 300px;
-  aspect-ratio: 1 / 1;   /* ✅ keeps square */
+  height: auto;          /* ✅ allow natural height */
   margin: auto;
   border-radius: 12px;
   overflow: hidden;
 }
+
 #scratch {
   position: absolute;
   top: 0;
@@ -114,9 +114,10 @@ input{
 .scratch-container img {
   width: 100%;
   height: 100%;
-  object-fit: contain;   /* ✅ NO cropping */
+  object-fit: cover;   /* ✅ REQUIRED */
   display: block;
 }
+
 
 </style>
 </head>
@@ -281,7 +282,7 @@ function resizeCanvas(){
   canvas.height = img.clientHeight;
 
   ctx.globalCompositeOperation = "source-over";
-  ctx.fillStyle = "#999";        // ✅ visible scratch layer
+  ctx.fillStyle = "#999";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.globalCompositeOperation = "destination-out";
@@ -289,7 +290,15 @@ function resizeCanvas(){
 
 
 
-img.onload = resizeCanvas;
+img.onload = () => {
+  const ratio = img.naturalHeight / img.naturalWidth;
+
+  const container = document.querySelector('.scratch-container');
+  container.style.height = (300 * ratio) + 'px';
+
+  resizeCanvas();   // ✅ canvas now matches image
+};
+
 window.addEventListener("resize", resizeCanvas);
 
 </script>
